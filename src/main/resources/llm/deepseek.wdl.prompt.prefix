@@ -1,0 +1,19 @@
+task get_recent_machines {
+  input {
+    String period
+    Int num_machines
+  }
+  output {
+    Array[String] machines
+  }
+}
+
+task add_machines_to_pool {
+  input {
+    Array[String] machines
+    String pool_id
+  }
+  output {
+    Array[String] added_machines
+  }
+}
