@@ -13,6 +13,10 @@
 	<name>my.workflow</name>
 	<properties>
 		<java.version>17</java.version>
+
+		<antlr.version>4.8-1</antlr.version>
+		<commons-lang3.version>3.17.0</commons-lang3.version>
+		<validation-api.version>2.0.1.Final</validation-api.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -22,6 +26,23 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${validation-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>${antlr.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 
 		<dependency>
@@ -61,6 +82,34 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>${antlr.version}</version>
+				<configuration>
+					<outputDirectory>${project.build.directory}/generated-sources/antlr4/com/gmail/at/ankyhe/wdl/parser</outputDirectory>
+					<arguments>
+						<argument>-package</argument>
+						<argument>com.gmail.at.ankyhe.wdl.parser</argument>
+						<argument>-listener</argument>
+						<argument>-visitor</argument>
+					</arguments>
+					<sourceDirectory>./src/main/antlr4</sourceDirectory>
+					<includes>
+						<include>WdlLexer.g4</include>
+						<include>WdlParser.g4</include>
+					</includes>
+					<visitor>true</visitor>
+					<listener>true</listener>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
