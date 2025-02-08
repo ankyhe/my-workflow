@@ -1,6 +1,6 @@
 version 1.2
 
-task get_recent_machines {
+task get_recent_registered_machines {
   input {
     String period
     Int limit
@@ -12,13 +12,13 @@ task get_recent_machines {
   }
 }
 
-task add_machines_to_pool {
+task put_machines_to_pool {
   input {
     Array[String] machine_ids
     String pool_id
   }
   output {
-   Array[String] added_machines
+   Array[String] put_machines
   }
 }
 
@@ -29,17 +29,17 @@ workflow AddRecentMachinesToPool {
   }
 
   # 调用 get_recent_machines 任务，获取最近添加的机器
-  call get_recent_machines {
+  call get_recent_registered_machines {
     input:
       period = period,
       limit = 10
   }
 
   # 从获取的机器列表中提取前10台机器
-  Array[String] top_10_machines = get_recent_machines.machine_ids[0:10]
+  Array[String] top_10_machines = get_recent_registered_machines.machine_ids[0:10]
 
   # 调用 add_machines_to_pool 任务，将前10台机器加入指定桌面池
-  call add_machines_to_pool {
+  call put_machines_to_pool {
     input:
       machine_ids = top_10_machines,
       pool_id = pool_id
@@ -47,6 +47,6 @@ workflow AddRecentMachinesToPool {
 
   # 输出添加到桌面池的机器ID列表
   output {
-    Array[String] added_machines = add_machines_to_pool.added_machines
+    Array[String] added_machines = put_machines_to_pool.put_machines
   }
 }

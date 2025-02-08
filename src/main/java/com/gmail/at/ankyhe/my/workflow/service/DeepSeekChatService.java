@@ -33,10 +33,14 @@ public class DeepSeekChatService implements LlmChatService {
 
     private String wdlPromptPrefix;
 
-    @Value("${deepSeek-api-url:https://api.deepseek.com/chat/completions}")
+    @Value("${llm.deepSeek-api-url:https://api.deepseek.com/chat/completions}")
     private String deepSeekApiUrl;
 
-    @Value("${deepSeek-api-key:#{null}}")
+    // This file: deepseek.wdl.prompt.prefix will be generated automatically from @TaskService and @Task
+    @Value("${llm.deepSeek-prompt-prefix-file:llm/deepseek.wdl.prompt.prefix}")
+    private String deepSeekPromptPrefixFile;
+
+    @Value("${llm.deepSeek-api-key:#{null}}")
     private String deepSeekApiKey;
 
     private final RestTemplate restTemplate;
@@ -48,8 +52,7 @@ public class DeepSeekChatService implements LlmChatService {
 
     @PostConstruct
     void init() {
-        // This file: deepseek.wdl.prompt.prefix will be generated automatically from @TaskService and @Task
-        this.wdlPromptPrefix = ResourceHelper.stringFromResourceFile("llm/deepseek.wdl.prompt.prefix");
+        this.wdlPromptPrefix = ResourceHelper.stringFromResourceFile(this.deepSeekPromptPrefixFile);
     }
 
     @Override
@@ -86,9 +89,9 @@ public class DeepSeekChatService implements LlmChatService {
         final String documentStr = extractWdlFromResponseBody(response.getBody());
 
         return """
-        version 1.2
-        %s
-        %s""".formatted(this.wdlPromptPrefix, documentStr);
+                version 1.2
+                %s
+                %s""".formatted(this.wdlPromptPrefix, documentStr);
     }
 
     private HttpHeaders prepareHttpHeaders() {
