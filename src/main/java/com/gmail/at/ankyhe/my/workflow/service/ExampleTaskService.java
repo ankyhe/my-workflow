@@ -9,12 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @TaskService
-public class LlmTaskService {
+public class ExampleTaskService {
 
     @Task
     public Object getRecentMachines(final String period, final int limit) {
         log.info("Call getRecentMachines({}, {})", period, limit);
-        return List.of("vm_1", "vm_2", "vm_3", "vm_4", "vm_5");
+        final List<String> ret = List.of("vm_1", "vm_2", "vm_3", "vm_4", "vm_5");
+        return ret.subList(0, Math.min(ret.size(), limit));
     }
 
     @Task
