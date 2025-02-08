@@ -32,14 +32,14 @@ public class TestConfiguration {
         );
 
         @Task
-        public Object getRecentMachines(final String period, final int limit) {
+        public Object getRecentRegisteredMachines(final String period, final int limit) {
             log.info("Call getRecentMachines({}, {})", period, limit);
             final int usedLimit = Math.min(limit, this.machines.size());
             return this.machines.subList(0, usedLimit);
         }
 
         @Task
-        public Object addMachinesToPool(final List<String> machineIds, final String poolId) {
+        public Object putMachinesToPool(final List<String> machineIds, final String poolId) {
             log.info("Call addMachinesToPool({}, {})", machineIds, poolId);
             return List.copyOf(machineIds);
         }
