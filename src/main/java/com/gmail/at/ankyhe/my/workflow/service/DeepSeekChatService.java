@@ -82,6 +82,7 @@ public class DeepSeekChatService implements LlmChatService {
         );
 
         final HttpEntity<String> request = new HttpEntity<>(JsonUtils.toString(body), headers);
+        log.debug("Request body is {}", request.getBody());
 
         final HttpEntity<String> response = this.restTemplate.postForEntity(this.deepSeekApiUrl, request, String.class);
         log.debug("Response body is {}", response.getBody());
